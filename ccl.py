@@ -6,18 +6,24 @@ from datetime import date
 from collections import OrderedDict, namedtuple
 
 def _proc_name(name):
+    '''formalize name string, for example " Josh  Huang " ==> "Josh Huang"'''
     return re.sub(r'\s+', ' ', name.strip())
 
 def _proc_phone(number):
+    '''formalize phone numbers'''
     return number.strip()
 
 def _proc_email(email):
+    '''formalize email string'''
     email.replace("mailto:", "")
     return email.strip()
 
+# The following dictionaries can be considered as
+# Tables in CCL database
 _students = {}
 _parents  = {}
 _classes  = {}
+
 def __ensure_init():
     if not __students or not __parents or not __classes:
         raise Exception('CCL database not initialized')
@@ -132,6 +138,7 @@ class Student:
 
     @property  # return fixed width string 
     def cname(self):
+        '''Return formatted chinese name'''
         name = self.chinesename
         if name is None: name = ""
         name = unicode(name, 'utf-8')
@@ -149,14 +156,17 @@ class Student:
 
     @classmethod
     def all(cls):
+        '''return all student list'''
         return _students.values()
 
     @classmethod
-    def get(cls, key):  # by id
+    def get(cls, key):
+        '''return a student by ID'''
         return _students[key]
 
     @classmethod
     def find(cls, name, classname=None):
+        '''return student with specific name and classname, if given'''
         if classname:
             cls = Class.get(classname)
             for s in cls.students:
@@ -171,6 +181,7 @@ class Student:
 
     @classmethod
     def add(cls, student):
+        '''add a student to student table'''
         if student.key in _students:
             student = _students[student.key]
         else:
@@ -178,7 +189,7 @@ class Student:
         return student
 
 class Class:
-    _language_class_rep = re.compile(r'(K|C|B)(\d+)?(A|P)(\d+)?')
+    _language_class_rep = re.compile(r'(K|C|B)(\d+)?(A|P)(\d+)?')  # regular expression to detection AM/PM class
     def __init__(self, name):
         self.name = self.key = name
         self.students = set()
@@ -203,6 +214,7 @@ class Class:
         return self.name in ["Pre-AP", "AP"]
 
     def ampm(self):
+        '''return NOON/AM/PM'''
         if self.isCultureClass(): return "NOON"
         if self.isAdultClass(): return "AM"
         if self.name == "Pre-AP": return "AM"
@@ -248,10 +260,7 @@ class Class:
 
 
 def __init_registration(filename):
-    ## ID,School year,Class,Student:Chinese name,Student,POD,Family,Family:Mother,Family:Home phone 1,
-    ## Family:Home phone 2,Family:Mobile phone 1,Family:Mobile phone 2,Family:Email 1,Family:Email 2,Status,
-    ## Tuition check amount,Tuition check #,Tuition check status,Onduty check #,Donation,Donation check #,
-    ## Donation status,Agree to Term and Conditions,Culture Class,Culture choice #1,Culture Choice #2,Culture choice #3
+    '''read from csv file download from google spreadsheet, and initialize students/parents/classes tables'''
     headerNames = (
       ID,  SCHOOL_YEAR, CLASS, STUDENT_CHINESE_NAME, STUDENT, POD, 
       # FAMILY, FAMILY_MOTHER, FAMILY_HOME_PHONE,

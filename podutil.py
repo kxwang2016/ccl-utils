@@ -97,7 +97,6 @@ def write_post(fh, asgm):
 
     print >> fh, sep
         
-
 def write_summary(fh, asgm, after):
     all = defaultdict(list)
     for duty in asgm.duties:
