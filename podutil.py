@@ -96,6 +96,7 @@ def write_post(fh, asgm):
             print >> fh, '%s, %s (%s) \t %s [%s]' % (student.lastname, student.firstname, student.cls, date, dname)
 
     print >> fh, sep
+
         
 def write_summary(fh, asgm, after):
     all = defaultdict(list)
@@ -109,7 +110,7 @@ def write_summary(fh, asgm, after):
         for d in ds:
             leading = '[%s]'%d.name
             for s in d.students:
-                print >> fh, '[%s]  %s \t%s %s' % (d.name, s, s.parent.phones_str, s.parent.emails_str)
+                print >> fh, '[%s] %-25s %-25s %s' % (d.name, s, s.parent.phones_str, s.parent.emails_str)
             print >> fh
 
 def write_pdf_pod_signature(pdff, asgm, after):
