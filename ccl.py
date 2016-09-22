@@ -217,8 +217,8 @@ class Class:
         '''return NOON/AM/PM'''
         if self.isCultureClass(): return "NOON"
         if self.isAdultClass(): return "AM"
-        if self.name == "Pre-AP": return "AM"
-        if self.name == "AP": return "PM"
+        if self.name == "Pre-AP": return "AM"   # this could change each year
+        if self.name == "AP": return "AM"       # this could change each year
 
         m = Class._language_class_rep.match(self.name)
         if m:
