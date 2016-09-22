@@ -93,7 +93,8 @@ def write_post(fh, asgm):
     for ss in sorted(ps.values(), key = lambda ss: ss[0][0].lastname):
         print >> fh, sep
         for student, date, dname in ss:
-            print >> fh, '%s, %s (%s) \t %s [%s]' % (student.lastname, student.firstname, student.cls, date, dname)
+            pretty_name = '%s, %s (%s)' % (student.lastname, student.firstname, student.cls)
+            print >> fh, '%-24s %s [%s]' % (pretty_name, date, dname)
 
     print >> fh, sep
 
